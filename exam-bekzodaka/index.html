@@ -1,0 +1,145 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>To-Do List</title> 
+<link rel="stylesheet" href="style.css">
+<style> 
+    body { 
+        font-family: Arial, sans-serif; 
+    } 
+    input[type="text"] { 
+        width: 70%; 
+        padding: 10px; 
+        margin: 10px 0; 
+    } 
+    button { 
+        padding: 10px 20px; 
+        margin-left: 5px; 
+        background-color: #2917ef; 
+        color: white; 
+        border: none rgb(68, 0, 255); 
+        cursor: pointer; 
+    } 
+    button:hover { 
+        background-color: #45a049; 
+    } 
+    .todo-item { 
+        margin: 5px 0; 
+    } 
+    .completed { 
+        text-decoration: line-through; 
+        color: #888; 
+    } 
+    .delete-btn { 
+        background-color: #f44336; 
+    } 
+</style> 
+</head> 
+<body> 
+ 
+<div class="l"><h2>To-Do List using javascript </h2> 
+ 
+    <input type="text" id="todoInput" placeholder="Enter your task..."> 
+    <button onclick="addTodo()">Add</button> </div>
+ 
+<ul id="todoList"> 
+</ul> 
+ 
+<script> 
+    // Function to add a new todo 
+    function addTodo() { 
+        var input = document.getElementById("todoInput"); 
+        var text = input.value; 
+        if (text === "") { 
+            alert("Please enter a task!"); 
+            return; 
+        } 
+        var todo = { 
+            id: new Date().getTime(), // Unique id based on timestamp 
+            text: text, 
+            completed: false 
+        }; 
+        todos.push(todo); // Add todo to array 
+        localStorage.setItem("todos", JSON.stringify(todos)); // Save todos to local storage 
+        renderTodoList(); // Render updated todo list 
+        input.value = ""; // Clear input field 
+    } 
+ 
+    // Function to toggle todo completion status 
+    function toggleComplete(id) { 
+        var todoIndex = todos.findIndex(todo => todo.id == id); 
+        todos[todoIndex].completed = !todos[todoIndex].completed; 
+        localStorage.setItem("todos", JSON.stringify(todos)); // Update local storage 
+        renderTodoList(); // Re-render todo list 
+    } 
+ 
+    // Function to delete a todo 
+    function deleteTodo(id) { 
+        var todoIndex = todos.findIndex(todo => todo.id == id); 
+        todos.splice(todoIndex, 1); // Remove todo from array 
+        localStorage.setItem("todos", JSON.stringify(todos)); // Update local storage 
+        renderTodoList(); // Re-render todo list 
+    } 
+ 
+    // Function to edit a todo 
+    function editTodo(id) { 
+        var todoIndex = todos.findIndex(todo => todo.id == id); 
+        var newText = prompt("Enter new text for this task:", todos[todoIndex].text); 
+        if (newText !== null) { 
+            todos[todoIndex].text = newText; 
+            localStorage.setItem("todos", JSON.stringify(todos)); // Update local storage 
+            renderTodoList(); // Re-render todo list 
+        } 
+    } 
+ 
+    // Function to render the todo list 
+    function renderTodoList() { 
+        var todoList = document.getElementById("todoList"); 
+        todoList.innerHTML = ""; // Clear existing list 
+        todos.forEach(todo => { 
+            var listItem = document.createElement("li"); 
+            listItem.className = "todo-item"; 
+            if (todo.completed) { 
+                listItem.classList.add("completed"); 
+            } 
+            listItem.innerText = todo.text; 
+             
+            // Add toggle complete functionality 
+            listItem.addEventListener("click", function() { 
+                toggleComplete(todo.id); 
+            }); 
+             
+            // Add edit button 
+            var editButton = document.createElement("button"); 
+            editButton.innerHTML = "Edit"; 
+            editButton.addEventListener("click", function(event) { 
+                event.stopPropagation(); // Prevent item click event from firing 
+                editTodo(todo.id); 
+            }); 
+             
+            // Add delete button 
+            var deleteButton = document.createElement("button"); 
+            deleteButton.innerHTML = "Delete"; 
+            deleteButton.className = "delete-btn"; 
+deleteButton.addEventListener("click",function(event) { 
+                event.stopPropagation(); // Prevent item click event from firing 
+                deleteTodo(todo.id); 
+            }); 
+             
+            listItem.appendChild(editButton); // Add edit button to todo item 
+            listItem.appendChild(deleteButton); // Add delete button to todo item 
+            todoList.appendChild(listItem); // Add todo item to todo list 
+        }); 
+    } 
+ 
+    // Load todos from local storage or initialize empty array 
+    var todos = JSON.parse(localStorage.getItem("todos")) || []; 
+ 
+    // Render initial todo list 
+    renderTodoList(); 
+</script> 
+ 
+</body> 
+</html>
